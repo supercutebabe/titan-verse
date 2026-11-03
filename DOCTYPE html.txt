@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Across the Titan-Verse Animation</title>
+    <style>
+        :root {
+            --bg-color: #0d0221;
+            --portal-color: #a124db;
+            --portal-glow: #e042ff;
+            --robin-red: #c8102e;
+            --star-green: #00ffcc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            perspective: 1000px;
+        }
+
+        /* Comic Book Frame / Container */
+        .comic-canvas {
+            position: relative;
+            width: 800px;
+            height: 450px;
+            background: linear-gradient(180deg, #120136 0%, #03001e 100%);
+            border: 8px solid #fff;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+
+        /* Spider-Verse Ben-Day Dots Background Overlay */
+        .comic-canvas::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.07) 15%, transparent 16%);
+            background-size: 8px 8px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Chromatic Aberration Border Effect */
+        .comic-canvas::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 2px solid rgba(255, 0, 128, 0.5);
+            transform: translate(2px, 1px);
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* The Volatile Star-Portal */
+        .portal {
+            position: absolute;
+            right: -50px;
+            top: 10%;
+            width: 250px;
+            height: 80%;
+            background: radial-gradient(circle, #000 30%, var(--portal-color) 60%, transparent 80%);
+            border-radius: 50%;
+            box-shadow: 0 0 60px var(--portal-glow), inset 0 0 40px #000;
+            z-index: 2;
+            animation: portalOscillate 0.15s infinite alternate steps(3);
+        }
+
+        /* Robin Sprite / Geometry */
+        .robin {
+            position: absolute;
+            left: -100px;
+            bottom: 80px;
+            width: 120px;
+            height: 140px;
+            z-index: 4;
+            animation: robinSprint 4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        .robin-body {
+            width: 100%;
+            height: 100%;
+            background-color: var(--robin-red);
+            clip-path: polygon(20% 20%, 70% 10%, 90% 40%, 70% 60%, 80% 90%, 40% 95%, 20% 60%, 0% 40%);
+            border-left: 15px solid #000; /* Cape representation */
+            position: relative;
+        }
+
+        /* Reaching Out Arm */
+        .robin-arm {
+            position: absolute;
+            right: -30px;
+            top: 30%;
+            width: 60px;
+            height: 20px;
+            background-color: #000;
+            transform: rotate(-10deg);
+            animation: armReach 0.1s infinite alternate steps(2);
+        }
+
+        /* Starfire Sprite / Geometry */
+        .starfire {
+            position: absolute;
+            left: 450px;
+            top: 30%;
+            width: 110px;
+            height: 150px;
+            z-index: 3;
+            animation: starfireFall 4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        .starfire-body {
+            width: 100%;
+            height: 100%;
+            background-color: #9b51e0; /* Purple suit */
+            clip-path: polygon(30% 0%, 70% 10%, 60% 40%, 80% 70%, 50% 100%, 20% 80%, 40% 40%, 10% 20%);
+            position: relative;
+        }
+
+        /* Starfire's Iconic Glowing Trails */
+        .starfire-hair {
+            position: absolute;
+            left: -40px;
+            top: 10px;
+            width: 80px;
+            height: 100px;
+            background: linear-gradient(90deg, transparent, var(--star-green));
+            clip-path: polygon(100% 0%, 0% 50%, 100% 100%);
+            opacity: 0.8;
+            filter: drop-shadow(0 0 15px var(--star-green));
+        }
+
+        /* Comic Text Action Popups */
+        .pop-text {
+            position: absolute;
+            font-size: 3.5rem;
+            font-style: italic;
+            color: #fff;
+            text-shadow: 4px 4px 0px #000, -2px -2px 0px var(--portal-glow);
+            z-index: 5;
+            opacity: 0;
+            transform: scale(0.3) rotate(-15deg);
+        }
+
+        .text-reach {
+            left: 250px;
+            top: 80px;
+            animation: popUpEffect 1s 1.5s forwards steps(4);
+        }
+
+        .text-thwoom {
+            right: 120px;
+            top: 150px;
+            color: #ff007f;
+            animation: popUpEffect 1.2s 3.2s forwards steps(3);
+        }
+
+        /* --- ANIMATIONS (Framerate Limited / Pop-Art Stepped Style) --- */
+        
+        @keyframes portalOscillate {
+            0% { transform: scale(1) skewX(-2deg); filter: hue-rotate(0deg); }
+            100% { transform: scale(1.05) skewX(2deg); filter: hue-rotate(30deg); }
+        }
+
+        @keyframes robinSprint {
+            0% { left: -100px; transform: scaleX(1); }
+            35% { left: 280px; }
+            75% { left: 330px; bottom: 90px; }
+            80% { left: 340px; bottom: 50px; } /* Desperate lunging dive */
+            100% { left: 450px; bottom: 20px; transform: rotate(15deg); } /* Slams empty ground */
+        }
+
+        @keyframes armReach {
+            0% { transform: rotate(-5deg) scaleY(0.9); }
+            100% { transform: rotate(-15deg) scaleY(1.1); }
+        }
+
+        @keyframes starfireFall {
+            0% { left: 450px; transform: scale(1) rotate(0deg); opacity: 1; }
+            40% { left: 480px; transform: scale(0.95) rotate(-10deg); opacity: 1; }
+            75% { left: 510px; transform: scale(0.85) rotate(-20deg); opacity: 0.9; filter: blur(0px); }
+            80% { left: 550px; transform: scale(0.6) rotate(-35deg); opacity: 0.5; filter: blur(4px); } /* Sucked in */
+            100% { left: 700px; transform: scale(0.1) rotate(-60deg); opacity: 0; filter: blur(10px); } /* Gone */
+        }
+
+        @keyframes popUpEffect {
+            0% { opacity: 0; transform: scale(0.3) rotate(-15deg); }
+            50% { opacity: 1; transform: scale(1.2) rotate(-10deg); }
+            100% { opacity: 0; transform: scale(1) rotate(-5deg); display: none; }
+        }
+
+        /* Action Overlay Flash */
+        .flash-overlay {
+            position: absolute;
+            inset: 0;
+            background-color: #ff007f;
+            mix-blend-mode: color-burn;
+            z-index: 6;
+            opacity: 0;
+            pointer-events: none;
+            animation: flashTrigger 0.3s 3.1s forwards;
+        }
+
+        @keyframes flashTrigger {
+            0% { opacity: 0; }
+            50% { opacity: 0.7; }
+            100% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Spider-Verse Style Viewport -->
+    <div class="comic-canvas">
+        
+        <!-- Background Flash Effect -->
+        <div class="flash-overlay"></div>
+
+        <!-- Stylized Graphic Text Overlays -->
+        <div class="pop-text text-reach">REACH!</div>
+        <div class="pop-text text-thwoom">THWOOM!</div>
+
+        <!-- Cosmic Star-Portal -->
+        <div class="portal"></div>
+
+        <!-- Starfire Figure -->
+        <div class="starfire">
+            <div class="starfire-hair"></div>
+            <div class="starfire-body"></div>
+        </div>
+
+        <!-- Robin Figure -->
+        <div class="robin">
+            <div class="robin-body">
+                <div class="robin-arm"></div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
